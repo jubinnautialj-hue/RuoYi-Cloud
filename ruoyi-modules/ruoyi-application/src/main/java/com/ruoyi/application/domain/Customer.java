@@ -61,6 +61,8 @@ public class Customer extends BaseEntity
 
     private List<CustomerCar> cars;
 
+    private List<CustomerVisit> visits;
+
     public Long getId()
     {
         return id;
@@ -239,5 +241,15 @@ public class Customer extends BaseEntity
     public void setCars(List<CustomerCar> cars)
     {
         this.cars = cars;
+    }
+
+    public List<CustomerVisit> getVisits()
+    {
+        return visits;
+    }
+
+    public void setVisits(List<CustomerVisit> visits)
+    {
+        this.visits = visits;
     }
 }
