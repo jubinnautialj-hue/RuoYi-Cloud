@@ -115,7 +115,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="240">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -138,6 +138,13 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['app:customer:del']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-order"
+            @click="handleViewVisit(scope.row)"
+            v-hasPermi="['app:visit:list']"
+          >回访记录</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -306,6 +313,53 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
+          <el-tab-pane label="回访记录" name="visit">
+            <el-row :gutter="10" class="mb8" v-if="!isView">
+              <el-col :span="1.5">
+                <el-button
+                  type="primary"
+                  plain
+                  icon="el-icon-plus"
+                  size="mini"
+                  @click="handleVisitAdd"
+                  v-hasPermi="['app:visit:add']"
+                >新增回访</el-button>
+              </el-col>
+            </el-row>
+            <el-table :data="form.visits" border size="small">
+              <el-table-column label="回访时间" align="center" prop="visitDate" width="120">
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.visitDate, '{y}-{m}-{d}') }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="回访内容" align="center" prop="visitContent" min-width="200" show-overflow-tooltip />
+              <el-table-column label="客户反馈" align="center" prop="feedback" min-width="150" show-overflow-tooltip />
+              <el-table-column label="回访人" align="center" prop="userName" width="100" />
+              <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.createTime) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center" width="150" v-if="!isView">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="handleVisitEdit(scope.$index, scope.row)"
+                    v-hasPermi="['app:visit:edit']"
+                  >修改</el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="handleVisitDelete(scope.$index, scope.row)"
+                    v-hasPermi="['app:visit:del']"
+                  >删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -408,11 +462,98 @@
         <el-button @click="cancelCar">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="visitTitle" :visible.sync="visitOpen" width="600px" append-to-body>
+      <el-form ref="visitForm" :model="visitForm" :rules="visitRules" label-width="100px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="回访时间" prop="visitDate">
+              <el-date-picker
+                v-model="visitForm.visitDate"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
+                style="width: 100%"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="回访内容" prop="visitContent">
+              <el-input v-model="visitForm.visitContent" type="textarea" :rows="4" placeholder="请输入回访内容" maxlength="1000" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="客户反馈" prop="feedback">
+              <el-input v-model="visitForm.feedback" type="textarea" :rows="3" placeholder="请输入客户反馈" maxlength="500" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="visitForm.remark" type="textarea" placeholder="请输入备注" maxlength="255" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitVisitForm">确 定</el-button>
+        <el-button @click="cancelVisit">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="查看回访记录" :visible.sync="visitViewOpen" width="900px" append-to-body>
+      <el-form :model="visitQueryParams" ref="visitQueryForm" size="small" :inline="true" label-width="80px">
+        <el-form-item label="关键字" prop="keyword">
+          <el-input
+            v-model="visitQueryParams.keyword"
+            placeholder="请输入关键字搜索"
+            clearable
+            style="width: 200px"
+            @keyup.enter.native="handleVisitQuery"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleVisitQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetVisitQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+      <el-table v-loading="visitLoading" :data="visitList" border size="small">
+        <el-table-column label="回访时间" align="center" prop="visitDate" width="120">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.visitDate, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="回访内容" align="center" prop="visitContent" min-width="200" show-overflow-tooltip />
+        <el-table-column label="客户反馈" align="center" prop="feedback" min-width="150" show-overflow-tooltip />
+        <el-table-column label="回访人" align="center" prop="userName" width="100" />
+        <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.createTime) }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination
+        v-show="visitTotal>0"
+        :total="visitTotal"
+        :page.sync="visitQueryParams.pageNum"
+        :limit.sync="visitQueryParams.pageSize"
+        @pagination="getVisitList"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visitViewOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listCustomer, getCustomer, delCustomer, addCustomer, updateCustomer } from "@/api/application/customer"
+import { listCustomerVisit, listCustomerVisitByCustomerId, addCustomerVisit, updateCustomerVisit, delCustomerVisit } from "@/api/application/customerVisit"
 
 export default {
   name: "Customer",
@@ -470,7 +611,27 @@ export default {
           { required: true, message: "车系名称不能为空", trigger: "blur" }
         ]
       },
-      isView: false
+      visitTitle: "",
+      visitOpen: false,
+      visitIndex: -1,
+      visitForm: {},
+      visitRules: {
+        visitContent: [
+          { required: true, message: "回访内容不能为空", trigger: "blur" }
+        ]
+      },
+      isView: false,
+      visitViewOpen: false,
+      visitLoading: false,
+      visitTotal: 0,
+      visitList: [],
+      currentCustomerId: undefined,
+      visitQueryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        customerId: undefined,
+        keyword: undefined
+      }
     }
   },
   created() {
@@ -506,7 +667,8 @@ export default {
         wechatOpenid: undefined,
         publish: 1,
         remark: undefined,
-        cars: []
+        cars: [],
+        visits: []
       }
       this.resetForm("form")
       this.activeTab = "basic"
@@ -540,6 +702,10 @@ export default {
         if (!this.form.cars) {
           this.form.cars = []
         }
+        if (!this.form.visits) {
+          this.form.visits = []
+        }
+        this.loadCustomerVisits(id)
         this.open = true
         this.title = "查看客户"
         this.isView = true
@@ -553,10 +719,21 @@ export default {
         if (!this.form.cars) {
           this.form.cars = []
         }
+        if (!this.form.visits) {
+          this.form.visits = []
+        }
+        this.loadCustomerVisits(id)
         this.open = true
         this.title = "修改客户"
         this.isView = false
       })
+    },
+    loadCustomerVisits(customerId) {
+      if (customerId) {
+        listCustomerVisitByCustomerId(customerId).then(response => {
+          this.form.visits = response.data || []
+        })
+      }
     },
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -637,6 +814,104 @@ export default {
     cancelCar() {
       this.carOpen = false
       this.resetForm("carForm")
+    },
+    handleVisitAdd() {
+      this.visitForm = {
+        id: undefined,
+        customerId: this.form.id,
+        visitDate: this.parseTime(new Date(), '{y}-{m}-{d}'),
+        visitContent: undefined,
+        feedback: undefined,
+        remark: undefined
+      }
+      this.visitIndex = -1
+      this.visitOpen = true
+      this.visitTitle = "添加回访记录"
+    },
+    handleVisitEdit(index, row) {
+      this.visitForm = Object.assign({}, row)
+      this.visitIndex = index
+      this.visitOpen = true
+      this.visitTitle = "修改回访记录"
+    },
+    handleVisitDelete(index, row) {
+      if (row.id) {
+        this.$modal.confirm('是否确认删除该回访记录？').then(() => {
+          delCustomerVisit(row.id).then(() => {
+            this.form.visits.splice(index, 1)
+            this.$modal.msgSuccess("删除成功")
+          })
+        }).catch(() => {})
+      } else {
+        this.$modal.confirm('是否确认删除该回访记录？').then(() => {
+          this.form.visits.splice(index, 1)
+          this.$modal.msgSuccess("删除成功")
+        }).catch(() => {})
+      }
+    },
+    submitVisitForm() {
+      this.$refs["visitForm"].validate(valid => {
+        if (valid) {
+          if (this.visitForm.id) {
+            updateCustomerVisit(this.visitForm).then(response => {
+              if (this.visitIndex >= 0) {
+                this.form.visits.splice(this.visitIndex, 1, this.visitForm)
+              }
+              this.$modal.msgSuccess("修改成功")
+              this.visitOpen = false
+              this.loadCustomerVisits(this.form.id)
+            })
+          } else {
+            if (this.form.id) {
+              this.visitForm.customerId = this.form.id
+              addCustomerVisit(this.visitForm).then(response => {
+                this.$modal.msgSuccess("新增成功")
+                this.visitOpen = false
+                this.loadCustomerVisits(this.form.id)
+              })
+            } else {
+              if (this.visitIndex >= 0) {
+                this.form.visits.splice(this.visitIndex, 1, this.visitForm)
+              } else {
+                if (!this.form.visits) {
+                  this.form.visits = []
+                }
+                this.form.visits.push(this.visitForm)
+              }
+              this.visitOpen = false
+            }
+          }
+        }
+      })
+    },
+    cancelVisit() {
+      this.visitOpen = false
+      this.resetForm("visitForm")
+    },
+    handleViewVisit(row) {
+      this.currentCustomerId = row.id
+      this.visitQueryParams.customerId = row.id
+      this.visitQueryParams.keyword = undefined
+      this.visitQueryParams.pageNum = 1
+      this.visitViewOpen = true
+      this.getVisitList()
+    },
+    getVisitList() {
+      this.visitLoading = true
+      listCustomerVisit(this.visitQueryParams).then(response => {
+        this.visitList = response.rows
+        this.visitTotal = response.total
+        this.visitLoading = false
+      })
+    },
+    handleVisitQuery() {
+      this.visitQueryParams.pageNum = 1
+      this.getVisitList()
+    },
+    resetVisitQuery() {
+      this.visitQueryParams.keyword = undefined
+      this.resetForm("visitQueryForm")
+      this.handleVisitQuery()
     }
   }
 }
