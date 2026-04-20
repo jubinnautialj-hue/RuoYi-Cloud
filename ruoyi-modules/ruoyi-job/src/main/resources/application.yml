@@ -1,0 +1,74 @@
+# Tomcat
+server:
+  port: 9203
+
+# Spring
+spring: 
+  application:
+    name: ruoyi-job
+  profiles:
+    active: dev
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: jingneng2023.
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ry-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: root
+  config:
+    file-extension: yml
+
+# feign 配置
+feign:
+  sentinel:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+  compression:
+    request:
+      enabled: true
+      min-request-size: 8192
+    response:
+      enabled: true
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# mybatis配置
+mybatis:
+  typeAliasesPackage: com.ruoyi.job.domain
+  mapperLocations: classpath:mapper/**/*.xml
+
+# springdoc配置
+springdoc:
+  gatewayUrl: http://localhost:8080/${spring.application.name}
+  api-docs:
+    enabled: true
+  info:
+    title: '定时任务接口文档'
+    description: '定时任务接口描述'
+    contact:
+      name: RuoYi
+      url: https://ruoyi.vip
