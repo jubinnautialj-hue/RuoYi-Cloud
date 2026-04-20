@@ -16,6 +16,10 @@ spring:
         server-addr: 127.0.0.1:8848
       config:
         server-addr: 127.0.0.1:8848
+        # 配置文件格式
+        file-extension: yml
+        # 配置组
+        group: DEFAULT_GROUP
   data:
     redis:
       host: localhost
@@ -27,7 +31,8 @@ spring:
     username: root
     password: root
   config:
-    file-extension: yml
+    import:
+      - optional:nacos:
 
 # feign 配置
 feign:
