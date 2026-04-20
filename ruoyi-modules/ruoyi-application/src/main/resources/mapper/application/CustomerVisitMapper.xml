@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.application.mapper.CustomerVisitMapper">
+
+    <resultMap type="CustomerVisit" id="CustomerVisitResult">
+        <id     property="id"              column="id"              />
+        <result property="customerId"      column="customer_id"     />
+        <result property="userId"          column="user_id"         />
+        <result property="visitContent"    column="visit_content"   />
+        <result property="visitDate"       column="visit_date"      />
+        <result property="feedback"        column="feedback"        />
+        <result property="createTime"      column="create_time"     />
+        <result property="createUser"      column="create_user"     />
+        <result property="updateTime"      column="update_time"     />
+        <result property="updateUser"      column="update_user"     />
+        <result property="remark"          column="remarks"         />
+        <result property="delFlag"         column="del_flag"        />
+        <result property="userName"        column="user_name"       />
+    </resultMap>
+
+    <sql id="selectCustomerVisitVo">
+        select cv.id, cv.customer_id, cv.user_id, cv.visit_content, cv.visit_date, cv.feedback, 
+               cv.create_time, cv.create_user, cv.update_time, cv.update_user, cv.remarks, cv.del_flag,
+               su.nick_name as user_name
+        from customer_visit cv
+        left join sys_user su on cv.user_id = su.user_id
+    </sql>
+
+    <select id="selectCustomerVisitList" parameterType="CustomerVisit" resultMap="CustomerVisitResult">
+        <include refid="selectCustomerVisitVo"/>
+        where cv.del_flag = '0'
+        <if test="customerId != null">
+            AND cv.customer_id = #{customerId}
+        </if>
+        <if test="userId != null">
+            AND cv.user_id = #{userId}
+        </if>
+        <if test="visitContent != null and visitContent != ''">
+            AND cv.visit_content like concat('%', #{visitContent}, '%')
+        </if>
+        <if test="feedback != null and feedback != ''">
+            AND cv.feedback like concat('%', #{feedback}, '%')
+        </if>
+        <if test="params.keyword != null and params.keyword != ''">
+            AND (cv.visit_content like concat('%', #{params.keyword}, '%') 
+                 OR cv.feedback like concat('%', #{params.keyword}, '%'))
+        </if>
+        order by cv.create_time desc
+    </select>
+
+    <select id="selectCustomerVisitByCustomerId" parameterType="Long" resultMap="CustomerVisitResult">
+        <include refid="selectCustomerVisitVo"/>
+        where cv.customer_id = #{customerId} and cv.del_flag = '0'
+        order by cv.create_time desc
+    </select>
+
+    <select id="selectCustomerVisitById" parameterType="Long" resultMap="CustomerVisitResult">
+        <include refid="selectCustomerVisitVo"/>
+        where cv.id = #{id}
+    </select>
+
+    <insert id="insertCustomerVisit" parameterType="CustomerVisit" useGeneratedKeys="true" keyProperty="id">
+        insert into customer_visit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="visitContent != null">visit_content,</if>
+            <if test="visitDate != null">visit_date,</if>
+            <if test="feedback != null">feedback,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="remark != null">remarks,</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="visitContent != null">#{visitContent},</if>
+            <if test="visitDate != null">#{visitDate},</if>
+            <if test="feedback != null">#{feedback},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate(),
+        </trim>
+    </insert>
+
+    <update id="updateCustomerVisit" parameterType="CustomerVisit">
+        update customer_visit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="visitContent != null">visit_content = #{visitContent},</if>
+            <if test="visitDate != null">visit_date = #{visitDate},</if>
+            <if test="feedback != null">feedback = #{feedback},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="remark != null">remarks = #{remark},</if>
+            update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteCustomerVisitById" parameterType="Long">
+        update customer_visit set del_flag = '2' where id = #{id}
+    </update>
+
+    <update id="deleteCustomerVisitByIds" parameterType="String">
+        update customer_visit set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteCustomerVisitByCustomerId" parameterType="Long">
+        update customer_visit set del_flag = '2' where customer_id = #{customerId}
+    </update>
+
+</mapper>
