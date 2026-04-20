@@ -17,5 +17,5 @@ spring:
   config:
     file-extension: yml
     import:
-      - nacos:application-${spring.profiles.active}.${spring.config.file-extension}
-      - nacos:${spring.application.name}-${spring.profiles.active}.${spring.config.file-extension}
+      - nacos:application-${spring.profiles.active}.${spring.config.file-extension}?refreshEnabled=true
+      - nacos:${spring.application.name}-${spring.profiles.active}.${spring.config.file-extension}?refreshEnabled=true
