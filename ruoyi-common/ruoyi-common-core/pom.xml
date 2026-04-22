@@ -59,10 +59,11 @@
             </exclusions>
         </dependency>
 
-        <!-- MyBatis Spring Boot Starter -->
+        <!-- MyBatis Spring Boot Autoconfigure (供PageHelper自动配置类引用，不引入完整starter) -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <artifactId>mybatis-spring-boot-autoconfigure</artifactId>
+            <version>${mybatis-spring-boot.version}</version>
         </dependency>
 
         <!-- Mybatis-Plus Spring Boot 4 Starter -->
