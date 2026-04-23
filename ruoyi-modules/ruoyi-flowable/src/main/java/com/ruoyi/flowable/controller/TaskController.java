@@ -3,7 +3,6 @@ package com.ruoyi.flowable.controller;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -30,7 +29,7 @@ public class TaskController extends BaseController
     @Autowired
     private ITaskService taskService;
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:todolist')")
+    @RequiresPermissions("flowable:task:todolist")
     @GetMapping("/todoList")
     public TableDataInfo todoList(TaskVo taskVo)
     {
@@ -40,7 +39,7 @@ public class TaskController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:donelist')")
+    @RequiresPermissions("flowable:task:donelist")
     @GetMapping("/doneList")
     public TableDataInfo doneList(TaskVo taskVo)
     {
@@ -50,7 +49,7 @@ public class TaskController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:myProcess')")
+    @RequiresPermissions("flowable:task:myProcess")
     @GetMapping("/myProcess")
     public TableDataInfo myProcess(TaskVo taskVo)
     {
@@ -60,7 +59,7 @@ public class TaskController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:query')")
+    @RequiresPermissions("flowable:task:query")
     @GetMapping(value = { "/", "/{taskId}" })
     public AjaxResult getInfo(@PathVariable(value = "taskId", required = false) String taskId)
     {
@@ -73,7 +72,7 @@ public class TaskController extends BaseController
         return ajax;
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:claim')")
+    @RequiresPermissions("flowable:task:claim")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/claim/{taskId}")
     public AjaxResult claim(@PathVariable String taskId)
@@ -82,7 +81,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.claimTask(taskId, userId));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:unclaim')")
+    @RequiresPermissions("flowable:task:unclaim")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/unclaim/{taskId}")
     public AjaxResult unclaim(@PathVariable String taskId)
@@ -90,7 +89,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.unclaimTask(taskId));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:complete')")
+    @RequiresPermissions("flowable:task:complete")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/complete/{taskId}")
     public AjaxResult complete(@PathVariable String taskId, @RequestBody(required = false) Map<String, Object> variables)
@@ -98,7 +97,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.completeTask(taskId, variables));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:delegate')")
+    @RequiresPermissions("flowable:task:delegate")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/delegate/{taskId}")
     public AjaxResult delegate(@PathVariable String taskId, @RequestParam("userId") String userId)
@@ -106,7 +105,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.delegateTask(taskId, userId));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:resolve')")
+    @RequiresPermissions("flowable:task:resolve")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/resolve/{taskId}")
     public AjaxResult resolve(@PathVariable String taskId, @RequestBody(required = false) Map<String, Object> variables)
@@ -114,7 +113,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.resolveTask(taskId, variables));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:assign')")
+    @RequiresPermissions("flowable:task:assign")
     @Log(title = "任务管理", businessType = BusinessType.UPDATE)
     @PostMapping("/assign/{taskId}")
     public AjaxResult assign(@PathVariable String taskId, @RequestParam("userId") String userId)
@@ -122,7 +121,7 @@ public class TaskController extends BaseController
         return toAjax(taskService.setAssignee(taskId, userId));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:task:comment')")
+    @RequiresPermissions("flowable:task:comment")
     @Log(title = "任务管理", businessType = BusinessType.INSERT)
     @PostMapping("/comment/{taskId}")
     public AjaxResult addComment(@PathVariable String taskId,

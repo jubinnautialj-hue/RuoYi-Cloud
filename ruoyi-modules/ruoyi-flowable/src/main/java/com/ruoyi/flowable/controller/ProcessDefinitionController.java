@@ -6,7 +6,6 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
 import org.springframework.transaction.annotation.Transactional;
+import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -37,7 +37,7 @@ public class ProcessDefinitionController extends BaseController
     @Autowired
     private RepositoryService repositoryService;
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:list')")
+    @RequiresPermissions("flowable:definition:list")
     @GetMapping("/list")
     public TableDataInfo list(ProcessDefinitionVo processDefinition)
     {
@@ -46,7 +46,7 @@ public class ProcessDefinitionController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:query')")
+    @RequiresPermissions("flowable:definition:query")
     @GetMapping(value = { "/", "/{processDefinitionId}" })
     public AjaxResult getInfo(@PathVariable(value = "processDefinitionId", required = false) String processDefinitionId)
     {
@@ -59,7 +59,7 @@ public class ProcessDefinitionController extends BaseController
         return ajax;
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:deploy')")
+    @RequiresPermissions("flowable:definition:deploy")
     @Log(title = "流程定义", businessType = BusinessType.INSERT)
     @PostMapping("/deploy")
     @Transactional(rollbackFor = Exception.class)
@@ -78,7 +78,7 @@ public class ProcessDefinitionController extends BaseController
         return AjaxResult.success("部署成功，部署ID：" + deployment.getId());
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:remove')")
+    @RequiresPermissions("flowable:definition:remove")
     @Log(title = "流程定义", businessType = BusinessType.DELETE)
     @DeleteMapping("/{deploymentIds}")
     public AjaxResult remove(@PathVariable String[] deploymentIds)
@@ -90,7 +90,7 @@ public class ProcessDefinitionController extends BaseController
         return AjaxResult.success();
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:edit')")
+    @RequiresPermissions("flowable:definition:edit")
     @Log(title = "流程定义", businessType = BusinessType.UPDATE)
     @PutMapping("/activate/{processDefinitionId}")
     public AjaxResult activate(@PathVariable String processDefinitionId)
@@ -98,7 +98,7 @@ public class ProcessDefinitionController extends BaseController
         return toAjax(processDefinitionService.activateProcessDefinitionById(processDefinitionId));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:definition:edit')")
+    @RequiresPermissions("flowable:definition:edit")
     @Log(title = "流程定义", businessType = BusinessType.UPDATE)
     @PutMapping("/suspend/{processDefinitionId}")
     public AjaxResult suspend(@PathVariable String processDefinitionId)

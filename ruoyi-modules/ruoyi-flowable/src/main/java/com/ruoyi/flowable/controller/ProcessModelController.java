@@ -6,7 +6,6 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -32,7 +32,7 @@ public class ProcessModelController extends BaseController
     @Autowired
     private IProcessModelService processModelService;
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:list')")
+    @RequiresPermissions("flowable:model:list")
     @GetMapping("/list")
     public TableDataInfo list(ProcessModel processModel)
     {
@@ -41,7 +41,7 @@ public class ProcessModelController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:query')")
+    @RequiresPermissions("flowable:model:query")
     @GetMapping(value = { "/", "/{modelId}" })
     public AjaxResult getInfo(@PathVariable(value = "modelId", required = false) String modelId)
     {
@@ -54,7 +54,7 @@ public class ProcessModelController extends BaseController
         return ajax;
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:add')")
+    @RequiresPermissions("flowable:model:add")
     @Log(title = "流程模型", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ProcessModel processModel)
@@ -63,7 +63,7 @@ public class ProcessModelController extends BaseController
         return toAjax(modelId != null);
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:edit')")
+    @RequiresPermissions("flowable:model:edit")
     @Log(title = "流程模型", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ProcessModel processModel)
@@ -71,7 +71,7 @@ public class ProcessModelController extends BaseController
         return toAjax(processModelService.updateProcessModel(processModel));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:remove')")
+    @RequiresPermissions("flowable:model:remove")
     @Log(title = "流程模型", businessType = BusinessType.DELETE)
     @DeleteMapping("/{modelIds}")
     public AjaxResult remove(@PathVariable String[] modelIds)
@@ -79,7 +79,7 @@ public class ProcessModelController extends BaseController
         return toAjax(processModelService.deleteProcessModelByIds(modelIds));
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:edit')")
+    @RequiresPermissions("flowable:model:edit")
     @PostMapping("/saveEditor")
     public AjaxResult saveEditor(@RequestParam("modelId") String modelId,
                                    @RequestParam("json_xml") String jsonXml,
@@ -99,7 +99,7 @@ public class ProcessModelController extends BaseController
         }
     }
 
-    @PreAuthorize("@ss.hasPermi('flowable:model:deploy')")
+    @RequiresPermissions("flowable:model:deploy")
     @Log(title = "流程模型", businessType = BusinessType.INSERT)
     @PostMapping("/deploy/{modelId}")
     public AjaxResult deploy(@PathVariable String modelId)
