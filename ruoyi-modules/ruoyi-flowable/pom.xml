@@ -77,11 +77,7 @@
             <artifactId>flowable-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- Flowable额外依赖 -->
-        <dependency>
-            <groupId>org.flowable</groupId>
-            <artifactId>flowable-json-converter</artifactId>
-        </dependency>
+        <!-- Flowable图片生成器（用于生成流程图） -->
         <dependency>
             <groupId>org.flowable</groupId>
             <artifactId>flowable-image-generator</artifactId>
