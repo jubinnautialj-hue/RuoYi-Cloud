@@ -35,6 +35,8 @@
         <poi.version>4.1.2</poi.version>
         <springdoc.version>3.0.2</springdoc.version>
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
+        <flowable.version>7.0.1</flowable.version>
+        <flowable-ui.version>7.0.1</flowable-ui.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -223,6 +225,43 @@
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-api-system</artifactId>
                 <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- Flowable工作流引擎 -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-engine</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-configurator</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-json-converter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bpmn-model</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bpmn-converter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-image-generator</artifactId>
+                <version>${flowable.version}</version>
             </dependency>
 
         </dependencies>
