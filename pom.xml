@@ -21,7 +21,8 @@
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.1.0.0</spring-cloud-alibaba.version>
         <spring-boot-admin.version>4.0.2</spring-boot-admin.version>
-        <mybatis-spring-boot.version>4.0.1</mybatis-spring-boot.version>
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
+        <mybatis-spring-boot.version>4.0.0</mybatis-spring-boot.version>
         <kaptcha.version>2.3.3</kaptcha.version>
         <pagehelper.boot.version>2.1.0</pagehelper.boot.version>
         <druid.version>1.2.28</druid.version>
@@ -34,6 +35,8 @@
         <poi.version>4.1.2</poi.version>
         <springdoc.version>3.0.2</springdoc.version>
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
+        <flowable.version>7.0.1</flowable.version>
+        <flowable-ui.version>7.0.1</flowable-ui.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -91,13 +94,25 @@
                         <artifactId>mybatis-spring</artifactId>
                         <groupId>org.mybatis</groupId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>mybatis-spring-boot-starter</artifactId>
+                        <groupId>org.mybatis.spring.boot</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
+            <!-- MyBatis Spring Boot Starter (Spring Boot 4兼容) -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring-boot.version}</version>
+            </dependency>
+
+            <!-- MyBatis-Plus Spring Boot 4 Starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
             <!-- io常用工具类 -->
@@ -210,6 +225,43 @@
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-api-system</artifactId>
                 <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- Flowable工作流引擎 -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-engine</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-configurator</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-json-converter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bpmn-model</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bpmn-converter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-image-generator</artifactId>
+                <version>${flowable.version}</version>
             </dependency>
 
         </dependencies>

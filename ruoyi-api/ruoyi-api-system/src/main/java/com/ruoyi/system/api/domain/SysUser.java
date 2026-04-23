@@ -3,6 +3,11 @@ package com.ruoyi.system.api.domain;
 import java.util.Date;
 import java.util.List;
 import jakarta.validation.constraints.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,15 +24,18 @@ import com.ruoyi.common.core.xss.Xss;
  * 
  * @author ruoyi
  */
+@TableName("sys_user")
 public class SysUser extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 用户ID */
+    @TableId(value = "user_id", type = IdType.AUTO)
     @Excel(name = "用户序号", type = Type.EXPORT, cellType = ColumnType.NUMERIC, prompt = "用户编号")
     private Long userId;
 
     /** 部门ID */
+    @TableField("dept_id")
     @Excel(name = "部门编号", type = Type.IMPORT)
     private Long deptId;
 
@@ -62,6 +70,7 @@ public class SysUser extends BaseEntity
     private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
+    @TableLogic
     private String delFlag;
 
     /** 最后登录IP */

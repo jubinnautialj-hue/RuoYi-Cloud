@@ -13,6 +13,9 @@ import router from './router'
 import directive from './directive' // directive
 import plugins from './plugins' // plugins
 import { download } from '@/utils/request'
+import dialogPlugin from '@/mixin/dialog' // dialog plugin
+
+Vue.use(dialogPlugin)
 
 import './assets/icons' // icon
 import './permission' // permission control
