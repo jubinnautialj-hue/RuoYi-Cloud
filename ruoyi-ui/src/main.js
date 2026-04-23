@@ -13,9 +13,9 @@ import router from './router'
 import directive from './directive' // directive
 import plugins from './plugins' // plugins
 import { download } from '@/utils/request'
-import dialogMixin from '@/mixin/dialog' // dialog mixin
+import dialogPlugin from '@/mixin/dialog' // dialog plugin
 
-Vue.mixin(dialogMixin)
+Vue.use(dialogPlugin)
 
 import './assets/icons' // icon
 import './permission' // permission control
