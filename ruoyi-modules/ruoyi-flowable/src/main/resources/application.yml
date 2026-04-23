@@ -23,6 +23,7 @@ spring:
 
 # Flowable配置
 flowable:
+  variable-json-mapper: jackson2
   database-schema-update: true
   history-level: full
   db-history-used: true
