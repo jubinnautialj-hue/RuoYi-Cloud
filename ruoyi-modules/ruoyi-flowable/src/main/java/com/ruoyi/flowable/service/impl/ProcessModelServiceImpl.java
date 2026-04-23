@@ -1,5 +1,6 @@
 package com.ruoyi.flowable.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -152,7 +153,12 @@ public class ProcessModelServiceImpl implements IProcessModelService
     @Override
     public InputStream getModelEditorSource(String modelId)
     {
-        return repositoryService.getModelEditorSource(modelId);
+        byte[] editorSource = repositoryService.getModelEditorSource(modelId);
+        if (editorSource != null)
+        {
+            return new ByteArrayInputStream(editorSource);
+        }
+        return null;
     }
 
     @Override
@@ -191,8 +197,6 @@ public class ProcessModelServiceImpl implements IProcessModelService
         processModel.setLastUpdateTime(model.getLastUpdateTime());
         processModel.setMetaInfo(model.getMetaInfo());
         processModel.setDeploymentId(model.getDeploymentId());
-        processModel.setEditorSourceValueId(model.getEditorSourceValueId());
-        processModel.setEditorSourceExtraValueId(model.getEditorSourceExtraValueId());
         processModel.setTenantId(model.getTenantId());
         return processModel;
     }
