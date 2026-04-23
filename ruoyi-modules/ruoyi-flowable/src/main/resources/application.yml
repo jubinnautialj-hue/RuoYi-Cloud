@@ -1,0 +1,37 @@
+# Tomcat
+server:
+  port: 9206
+
+# Spring
+spring:
+  application:
+    name: ruoyi-flowable
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        group: DEFAULT_GROUP
+  config:
+    import:
+      - optional:nacos:application-${spring.profiles.active}.yml?refreshEnabled=true
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml?refreshEnabled=true
+
+# Flowable配置
+flowable:
+  variable-json-mapper: jackson2
+  database-schema-update: true
+  history-level: full
+  db-history-used: true
+  async-executor-activate: true
+  idm:
+    enabled: false
+
+# MyBatis-Plus配置
+mybatis-plus:
+  type-aliases-package: com.ruoyi.flowable.domain
+  mapper-locations: classpath:mapper/**/*.xml

@@ -11,7 +11,7 @@ import com.ruoyi.common.security.annotation.EnableRyFeignClients;
  * @author ruoyi
  */
 @EnableCustomConfig
-@EnableRyFeignClients   
+@EnableRyFeignClients
 @SpringBootApplication
 public class RuoYiJobApplication
 {

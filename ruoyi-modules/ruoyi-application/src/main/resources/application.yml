@@ -1,0 +1,31 @@
+# Tomcat
+server:
+  port: 9205
+
+# Spring
+spring:
+  application:
+    name: ruoyi-application
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        # 配置文件格式
+        file-extension: yml
+        # 配置组
+        group: DEFAULT_GROUP
+  config:
+    import:
+      - optional:nacos:application-${spring.profiles.active}.yml?refreshEnabled=true
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml?refreshEnabled=true
+
+# MyBatis-Plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  type-aliases-package: com.ruoyi.application.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapper-locations: classpath:mapper/**/*.xml
