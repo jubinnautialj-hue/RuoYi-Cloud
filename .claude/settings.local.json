@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep *)",
+      "Bash(mvn dependency:tree -pl ruoyi-common/ruoyi-common-core)",
+      "Bash(mvn dependency:tree -pl ruoyi-common/ruoyi-common-core -Dverbose)",
+      "Bash(mvn clean *)",
+      "Bash(java -version)",
+      "Bash(mvn -version)",
+      "Bash(export JAVA_HOME=\"/d/Program Files/Java/jdk-17\")",
+      "Bash(export PATH=\"$JAVA_HOME/bin:$PATH\")",
+      "Bash(export JAVA_HOME=\"/d/Program Files/java_svt/jdk-17\")",
+      "Bash(mvn dependency:tree -pl ruoyi-modules/ruoyi-system)",
+      "Bash(mvn dependency:tree -pl ruoyi-modules/ruoyi-job)",
+      "Bash(mvn dependency:tree -pl ruoyi-modules/ruoyi-system -Dverbose)",
+      "Bash(mvn dependency:build-classpath -pl ruoyi-modules/ruoyi-system -Dmdep.outputFile=/tmp/cp.txt)",
+      "Read(//tmp/**)",
+      "Bash(jar tf *)",
+      "Bash(javap -public -cp \"D:\\\\software\\\\maven_repo\\\\com\\\\github\\\\pagehelper\\\\pagehelper-spring-boot-autoconfigure\\\\2.1.0\\\\pagehelper-spring-boot-autoconfigure-2.1.0.jar\" com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration)",
+      "Bash(javap -v -cp \"D:\\\\software\\\\maven_repo\\\\com\\\\github\\\\pagehelper\\\\pagehelper-spring-boot-autoconfigure\\\\2.1.0\\\\pagehelper-spring-boot-autoconfigure-2.1.0.jar\" com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration)",
+      "Bash(javap -v -cp \"D:\\\\software\\\\maven_repo\\\\org\\\\mybatis\\\\spring\\\\boot\\\\mybatis-spring-boot-autoconfigure\\\\4.0.0\\\\mybatis-spring-boot-autoconfigure-4.0.0.jar\" org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration)",
+      "Bash(mvn dependency:build-classpath -pl ruoyi-modules/ruoyi-system -Dmdep.outputFile=/tmp/cp2.txt)",
+      "Bash(unzip -p \"D:\\\\software\\\\maven_repo\\\\com\\\\github\\\\pagehelper\\\\pagehelper-spring-boot-starter\\\\2.1.0\\\\pagehelper-spring-boot-starter-2.1.0.pom\")",
+      "Bash(mvn install *)",
+      "Bash(mvn dependency:build-classpath -pl ruoyi-modules/ruoyi-system -Dmdep.outputFile=/tmp/cp3.txt)",
+      "Bash(java -cp \".;D:/software/maven_repo/org/apache/velocity/velocity-engine-core/2.3/velocity-engine-core-2.3.jar;D:/software/maven_repo/commons-io/commons-io/2.21.0/commons-io-2.21.0.jar;D:/software/maven_repo/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar;D:/software/maven_repo/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar\" TestVelocity)",
+      "Bash(python3 *)"
+    ]
+  }
+}

@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.SysMenu;
 
 /**
@@ -9,7 +10,7 @@ import com.ruoyi.system.domain.SysMenu;
  * 
  * @author ruoyi
  */
-public interface SysMenuMapper
+public interface SysMenuMapper extends BaseMapper<SysMenu>
 {
     /**
      * 查询系统菜单列表
